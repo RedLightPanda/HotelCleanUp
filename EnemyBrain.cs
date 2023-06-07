@@ -23,6 +23,8 @@ public class EnemyBrain : MonoBehaviour
         stunCounter = waitPoint;
         Dirtycount = 5;
         
+        windowHP = GetComponent<WindowsHealth>();
+        
         foreach (Transform pPoint in patrolPath){
             patrolHold.transform.SetParent(null);
         }
