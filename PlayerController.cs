@@ -9,6 +9,7 @@ public class PlayerController : MonoBehaviour
     public float moveSpeed;
     public float jumpForce;
     public bool clean = true;
+    public bool wash = false;
 
     #region Attack    
     private float soapRate = .5f;
@@ -18,7 +19,6 @@ public class PlayerController : MonoBehaviour
     public Animator animate;
     public Transform firePoint,groundEye;
     public LayerMask isthereGround;
-    public WindowsHealth windowHP;
     private bool isGrounded;
 
     #region GameObject
@@ -32,7 +32,10 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private bool canBubbleShot = false;
     #endregion
 
-    //public bool canMove;
+    #region Knock back numbers
+    public bool enemyHit;
+    public float kickBack;
+    #endregion
 
     void Start()
     {
@@ -76,9 +79,18 @@ public class PlayerController : MonoBehaviour
             }
         }
 
-        if(Input.GetButtonDown("Fire2") && clean == true){
-            windowHP.windowHealth++;
-            clean = false;
+        if(enemyHit == true)
+        {
+            if(rb2D.velocity.x < 0)
+            {
+                rb2D.AddForce(transform.right * kickBack, ForceMode2D.Force);
+                enemyHit = false;
+            }
+            else if (rb2D.velocity.x > 0)
+            {
+                 rb2D.AddForce(-transform.right * kickBack, ForceMode2D.Force);
+                 enemyHit = false;
+            }
         }
                
     }
@@ -110,9 +122,10 @@ public class PlayerController : MonoBehaviour
         canBubbleShot = true;
     }
 
-    public void OnTriggerEnter2D(Collider2D other){
-        if(other.tag == "Window" && windowHP.windowHealth <= 0){
-            clean = true;
+    void OnTriggerEnter2D(Collider2D other) {
+        if(other.tag == "Enemy")
+        {       
+          enemyHit = true;  
         }
     }
 
