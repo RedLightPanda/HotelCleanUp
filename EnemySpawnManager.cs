@@ -9,7 +9,8 @@ public class EnemySpawnManager : MonoBehaviour
     [SerializeField] private GameObject Player;
     [SerializeField] private Transform[] spawnpoints;
     [SerializeField] private bool[] attendance;
-    [SerializeField] private int enemyAttendance;
+    [SerializeField] private int[] enemyAttendance;
+    [SerializeField] private int maxFloor;
     [SerializeField] private int maxCount = 5;
     [SerializeField] private int index = 0;
     public static EnemySpawnManager instance;
@@ -38,9 +39,13 @@ public class EnemySpawnManager : MonoBehaviour
         while(true)
         {
             if(enemyPin.transform.childCount < maxCount){
-                index = Random.Range(0, spawnpoints.Length);
+                do
+                {
+                    index = Random.Range(0, spawnpoints.Length);
+                }
+                while(attendance[index] == true);
+                
                 Vector3 location = spawnpoints[index].position;
-                enemyAttendance[index] = true;
                 GameObject monster = Instantiate(monsterArray[Random.Range(0, monsterArray.Length)]);
                 monster.transform.Translate(location);
                 monster.transform.parent = enemyPin.transform;
